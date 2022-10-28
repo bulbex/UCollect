@@ -35,8 +35,6 @@ app.use((req, res, next) => {
     next()
 })
 
-app.use(cors(corsOptions))
-
 authRoutes(app)
 
 userRoutes(app)
