@@ -1,0 +1,184 @@
+<div
+    class="modal"
+    id="addItemModal"
+    data-bs-backdrop="static"
+    aria-labelledby="addItemLabel"
+    aria-hidden="true"
+>
+
+    <div
+        class="modal-dialog modal-fullscreen-sm-down modal-dialog-centered modal-dialog-scrollable"
+    >
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="addItemLabel">
+                    {{ "Add Item" | translate }}
+                </h5>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    [attr.aria-label]="'Close add item modal' | translate"
+                ></button>
+            </div>
+
+            <div class="modal-body">
+                <form
+                    #addItemForm="ngForm"
+                    id="addItemForm"
+                    (ngSubmit)="addItemForm.valid && addItem(addItemForm)"
+                >
+                    <div>
+                        <label for="itemName">{{ "Name" | translate }}</label>
+                        <input
+                            id="itemName"
+                            ngModel
+                            #itemName="ngModel"
+                            name="name"
+                            type="text"
+                            class="form-control"
+                            minlength="5"
+                            maxlength="50"
+                            required
+                            noSpaces
+                        />
+                        <div
+                            *ngIf="itemName.errors && addItemForm.submitted"
+                            class="input-helper"
+                        >
+                            <div
+                                *ngIf="
+                                    itemName.errors['required'] ||
+                                    itemName.errors['spaces']
+                                "
+                            >
+                                {{ "Name is required" | translate }}
+                            </div>
+                            <div
+                                *ngIf="
+                                    itemName.errors['minlength'] &&
+                                    !itemName.errors['spaces']
+                                "
+                            >
+                                {{ "Name must be at least 5 characters" | translate }}
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="itemTags" class="mt-2">
+                            {{ "Tags (max.5)" | translate }}
+                        </label>
+                        <input
+                            id="itemTags"
+                            ngModel
+                            #itemTags="ngModel"
+                            name="tags"
+                            class="form-control"
+                            (input)="autocomplete(itemTags.value)"
+                            [(ngModel)]="chosenTags"
+                            required
+                            noSpaces
+                            tags
+                        />
+
+                        <!-- Tags autocomplete -->
+                        <div *ngIf="autocompleteResult?.length" class="w-100 btn-group-vertical">
+                            <button
+                                *ngFor="let tag of autocompleteResult"
+                                type="button"
+                                class="btn btn-secondary border border-2 text-start"
+                                [attr.aria-label]="'Set item tag' | translate"
+                                (click)="setTag(tag, itemTags.value)"
+                            >
+                                {{ tag }}
+                            </button>
+                        </div>
+                        <!--  -->
+
+                        <div
+                            *ngIf="itemTags.errors && addItemForm.submitted"
+                            class="input-helper"
+                        >
+                            <div
+                                *ngIf="
+                                    itemTags.errors['required'] ||
+                                    itemTags.errors['spaces']
+                                "
+                            >
+                                {{ "Tags are required" | translate }}
+                            </div>
+                            <div
+                                *ngIf="
+                                    itemTags.errors['isTags'] &&
+                                    !itemTags.errors['spaces']
+                                "
+                            >
+                                {{
+                                    "Please enter tags correctly (e.g. #rare#gold)"
+                                        | translate
+                                }}
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+
+                <div *ngFor="let field of additionalFields">
+
+                    <label [for]="field.name" class="mt-2">
+                        {{ field.name }}
+                    </label>
+
+                    <input
+                        *ngIf="field.type !== 'multiline' && field.type !== 'checkbox'"
+                        [id]="field.name"
+                        [type]="field.type"
+                        [(ngModel)]="field.value"
+                        class="form-control"
+                        min="0"
+                        maxlength="30"
+                    />
+
+                    <textarea
+                        *ngIf="field.type === 'multiline'"
+                        [id]="field.name"
+                        [(ngModel)]="field.value"
+                        class="form-control"
+                        maxlength="300"
+                        rows="3"
+                    ></textarea>
+
+                    <div *ngIf="field.type === 'checkbox'">
+                        <input
+                            [id]="field.name"
+                            [type]="field.type"
+                            #checkbox
+                            class="form-check-input"
+                            [value]="checkbox.checked ? false : true"
+                            (input)="field.value = checkbox.value"
+                        />
+                        <label [for]="field.name" class="form-check-label ms-2">
+                            {{ "Yes/No" | translate }}
+                        </label>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="submit" form="addItemForm" class="btn btn-primary">
+                    {{ "Add" | translate }}
+                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    {{ "Close" | translate }}
+                </button>
+            </div>
+            
+        </div>
+
+    </div>
+
+</div>
