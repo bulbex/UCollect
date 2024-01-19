@@ -1,0 +1,36 @@
+{
+    "name": "ucollect",
+    "version": "1.0.0",
+    "description": "",
+    "main": "app.js",
+    "scripts": {
+        "build": "cd _frontend && npm run build",
+        "install-front": "cd _frontend && npm install",
+        "postbuild": "npm run install-front && npm run build",
+        "start": "node app.js",
+        "server": "nodemon app.js",
+        "front": "cd _frontend && npm run start",
+        "dev": "concurrently \"npm run server\" \"npm run front\""
+    },
+    "keywords": [],
+    "author": "bulbex",
+    "license": "ISC",
+    "devDependencies": {
+        "nodemon": "^2.0.19",
+        "cors": "^2.8.5"
+    },
+    "dependencies": {
+        "bcrypt": "^5.0.1",
+        "dotenv": "^16.0.2",
+        "express": "^4.18.1",
+        "express-validator": "^6.14.2",
+        "fast-folder-size": "^1.7.1",
+        "jsonwebtoken": "^8.5.1",
+        "mongoose": "^6.5.1",
+        "multer": "^1.4.5-lts.1"
+    },
+    "engines": {
+        "node": "16.16.0",
+        "npm": "7.21.0"
+    }
+}
