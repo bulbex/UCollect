@@ -1,0 +1,204 @@
+<div
+    class="modal"
+    id="editCollection"
+    data-bs-backdrop="static"
+    aria-labelledby="editCollectionLabel"
+    aria-hidden="true"
+>
+    <div
+        class="modal-dialog modal-xl modal-fullscreen-xl-down modal-dialog-centered modal-dialog-scrollable"
+    >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editCollectionLabel">
+                    {{ "Edit collection" | translate }}
+                </h5>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    [attr.aria-label]="'Close' | translate"
+                ></button>
+            </div>
+
+            <div class="modal-body">
+                <form
+                    *ngIf="collection"
+                    class="py-2"
+                    id="editForm"
+                    #editForm="ngForm"
+                    (ngSubmit)="editForm.valid && editCollection(editForm)"
+                >
+                    <div class="row row-cols-lg-2">
+                        <div class="col-12 col-lg-4">
+                            <ngx-file-drop
+                                *ngIf="!collection.photo && !photoPreview"
+                                [multiple]="false"
+                                [directory]="false"
+                                accept=".png, .jpg, .jpeg, .svg"
+                                [showBrowseBtn]="true"
+                                dropZoneClassName="h-100 border border-1 rounded border-primary py-5 px-3"
+                                contentClassName="h-100 fs-5 d-flex flex-column justify-content-center gap-2 text-center py-2"
+                                [dropZoneLabel]="'Upload or browse to change collection photo' | translate"
+                                [browseBtnLabel]="'Browse images' | translate"
+                                (onFileDrop)="setPhoto($event[0])"
+                            >
+                            </ngx-file-drop>
+                            <div
+                                *ngIf="!collection.photo && photoPreview"
+                                class="h-100 position-relative p-2 d-flex justify-content-center align-items-center border border-1 rounded border-primary"
+                            >
+                                <img
+                                    [src]="photoPreview"
+                                    [alt]="'Collection photo' | translate"
+                                    class="w-50 rounded"
+                                />
+                                <button
+                                    type="button"
+                                    class="btn-close position-absolute top-0 end-0 m-3"
+                                    (click)="resetImgPreview()"
+                                ></button>
+                            </div>
+                            <div
+                                *ngIf="collection.photo && !photoPreview"
+                                class="h-100 position-relative p-2 d-flex justify-content-center align-items-center border border-1 rounded border-primary"
+                            >
+                                <img
+                                    [src]="collection.photo"
+                                    [alt]="'Collection photo' | translate"
+                                    class="w-50 rounded"
+                                />
+                                <button
+                                    type="button"
+                                    class="btn-close position-absolute top-0 end-0 m-3"
+                                    (click)="resetCurrentPhoto()"
+                                ></button>
+                            </div>
+                        </div>
+                        <div
+                            class="d-flex flex-column text-start gap-2 col-12 col-lg-8 mt-2 mt-lg-0"
+                        >
+                            <div>
+                                <label for="collection-name">{{ "Name" | translate }}</label>
+                                <input
+                                    type="text"
+                                    id="collection-name"
+                                    class="form-control"
+                                    ngModel
+                                    #name="ngModel"
+                                    [(ngModel)]="collection.name"
+                                    name="name"
+                                    minlength="5"
+                                    maxlength="50"
+                                    required
+                                    noSpaces
+                                />
+                                <div
+                                    *ngIf="name.errors && editForm.submitted"
+                                    class="input-helper"
+                                >
+                                    <div
+                                        *ngIf="
+                                            name.errors['required'] ||
+                                            name.errors['spaces']
+                                        "
+                                    >
+                                        {{ "Name is required" | translate }}
+                                    </div>
+                                    <div *ngIf="name.errors['minlength']">
+                                        {{
+                                            "Name must be at least 5 characters"
+                                                | translate
+                                        }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="collection-topic">{{
+                                    "Topic" | translate
+                                }}</label>
+                                <select
+                                    id="collection-topic"
+                                    ngModel
+                                    #topic="ngModel"
+                                    [(ngModel)]="collection.topic"
+                                    name="topic"
+                                    class="form-select"
+                                    [attr.aria-label]="'Topic select' | translate"
+                                    required
+                                >
+                                    <option
+                                        *ngFor="let topic of topics"
+                                        [value]="topic"
+                                    >
+                                        {{ topic | translate }}
+                                    </option>
+                                </select>
+                                <div
+                                    *ngIf="topic.errors && editForm.submitted"
+                                    class="input-helper"
+                                >
+                                    <div *ngIf="topic.errors['required']">
+                                        {{ "Topic is required" | translate }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="collection-description">
+                                    {{ "Description" | translate }}
+                                </label>
+                                <textarea
+                                    id="collection-description"
+                                    ngModel
+                                    #description="ngModel"
+                                    [(ngModel)]="collection.description"
+                                    name="description"
+                                    rows="5"
+                                    class="form-control"
+                                    minlength="10"
+                                    maxlength="400"
+                                    required
+                                    noSpaces
+                                ></textarea>
+                                <div
+                                    *ngIf="description.errors && editForm.submitted"
+                                    class="input-helper"
+                                >
+                                    <div
+                                        *ngIf="
+                                            description.errors['required'] ||
+                                            description.errors['spaces']
+                                        "
+                                    >
+                                        {{ "Description is required" | translate }}
+                                    </div>
+                                    <div
+                                        *ngIf="
+                                            description.errors['minlength'] &&
+                                            !description.errors['spaces']
+                                        "
+                                    >
+                                        {{
+                                            "Description must be at least 10 characters"
+                                                | translate
+                                        }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="submit" form="editForm" class="btn btn-primary">
+                    {{ "Save" | translate }}
+                </button>
+                <button type="button" class="btn btn-secondary" (click)="resetImgPreview()" data-bs-dismiss="modal">
+                    {{ "Close" | translate }}
+                </button>
+            </div>
+            
+        </div>
+    </div>
+</div>

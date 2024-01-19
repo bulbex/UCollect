@@ -1,0 +1,229 @@
+<nav class="w-100 navbar navbar-dark bg-dark">
+    <div class="container-xxl">
+        <!-- Logo -->
+        <a routerLink="" class="navbar-brand fs-4"> UCollect </a>
+        <!--  -->
+
+        <!-- Search container -->
+        <div class="position-relative d-none d-sm-flex mx-lg-auto me-lg-5 col-lg-6 col-8">
+            <form
+                #searchForm="ngForm"
+                class="w-100 input-group"
+                (ngSubmit)="searchInput.value && search(searchForm)"
+            >
+                <input
+                    ngModel
+                    #searchInput="ngModel"
+                    name="searchValue"
+                    class="form-control border-0"
+                    type="search"
+                    [placeholder]="'Search on UCollect...' | translate"
+                    [attr.aria-label]="'Search' | translate"
+                />
+                <input
+                    type="submit"
+                    class="btn btn-primary"
+                    [value]="'Search' | translate"
+                />
+            </form>
+        </div>
+        <!--  -->
+
+        <!-- Page settings and navigation -->
+        <div class="d-none d-lg-flex align-items-center gap-3">
+            <div>
+                <button
+                    class="lang-btn btn btn-link rounded-0 p-0 pe-2 border-0 border-end border-white text-decoration-none"
+                    (click)="setLanguage('en')"
+                    [disabled]="langService.current === 'en'"
+                >
+                    EN
+                </button>
+                <button
+                    class="lang-btn btn btn-link rounded-0 p-0 ps-2 border-0 text-decoration-none"
+                    (click)="setLanguage('pl')"
+                    [disabled]="langService.current === 'pl'"
+                >
+                    PL
+                </button>
+            </div>
+            <button class="btn btn-dark" (click)="changeTheme()">
+                <i [class]="themeIcon"></i>
+            </button>
+            
+            <!-- Desktop dropdowns -->
+            
+                <!-- When no current user -->
+                <div
+                    *ngIf="user === null"
+                    class="d-flex justify-content-end align-items-center"
+                >
+                    <a routerLink="authentication/signin" class="text-decoration-none text-primary me-3">
+                        {{ "Sign in" | translate }}
+                    </a>
+                    <button routerLink="authentication/signup" class="btn btn-primary">
+                        {{ "Sign up" | translate }}
+                    </button>
+                </div>
+                <!--  -->
+
+
+                <!-- When current user exists -->
+                <div *ngIf="user !== null" class="dropdown d-none d-lg-flex">
+                    <button
+                        class="dropdown-toggle btn btn-primary"
+                        type="button"
+                        data-bs-toggle="dropdown"
+                        data-bs-auto-close="true"
+                        aria-expanded="false"
+                    >
+                        {{ user.username }}
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end mt-2">
+                        <li>
+                            <button
+                                [routerLink]="'/user/' + user.username"
+                                class="dropdown-item"
+                            >
+                                {{ "My Collections" | translate }}
+                            </button>
+                        </li>
+                        <li *ngIf="user.role === 'ADMIN'">
+                            <button
+                                routerLink="/admin-panel"
+                                class="dropdown-item"
+                            >
+                                {{ "Admin panel" | translate }}
+                            </button>
+                        </li>
+                        <li>
+                            <button routerLink="" class="dropdown-item" (click)="logout()">
+                                {{ "Log out" | translate }}
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                <!--  -->
+
+            <!--  -->
+
+        </div>
+        <!--  -->
+
+            <!-- Mobile dropdown -->
+            <div class="dropdown d-lg-none d-flex">
+                <button
+                    class="menu-burger-btn d-flex d-lg-none flex-column btn btn-dark rounded p-2"
+                    data-bs-toggle="dropdown"
+                    data-bs-auto-close="outside"
+                    aria-expanded="false"
+                >
+                    <span class="my-2"></span>
+                </button>
+                <ul class="dropdown-mobile dropdown-menu dropdown-menu-end mt-2">
+                    <li>
+                        <h6 *ngIf="user !== null" class="dropdown-header">
+                            {{ user.username }}
+                        </h6>
+                        <h6 *ngIf="user === null" class="dropdown-header">
+                            {{ "UCollect" }}
+                        </h6>
+                        <hr class="dropdown-divider" />
+                    </li>
+                    <!-- Mobile search container -->
+                    <div class="px-3 position-relative d-flex d-sm-none">
+                        <div class="w-100 position-relative">
+                            <form
+                                #mobileSearchForm="ngForm"
+                                class="w-100 input-group"
+                                (ngSubmit)="
+                                    mobileSearchInput.value && search(mobileSearchForm)
+                                "
+                            >
+                                <input
+                                    class="form-control border-0"
+                                    type="search"
+                                    ngModel
+                                    #mobileSearchInput="ngModel"
+                                    name="searchValue"
+                                    [placeholder]="'Search on UCollect...' | translate"
+                                    [attr.aria-label]="'Search' | translate"
+                                />
+                                <input
+                                    type="submit"
+                                    class="btn btn-primary"
+                                    [value]="'Search' | translate"
+                                />
+                            </form>
+                        </div>
+                    </div>
+                    <hr class="dropdown-divider d-sm-none" />
+                    <!-- When current user exists -->
+                    <ng-container *ngIf="user !== null">
+                        <li>
+                            <button
+                                [routerLink]="'/user/' + user.username"
+                                class="dropdown-item"
+                            >
+                                {{ "My Collections" | translate }}
+                            </button>
+                        </li>
+                        <!-- When current user is admin -->
+                        <li *ngIf="user.role === 'ADMIN'">
+                            <button routerLink="/admin-panel" class="dropdown-item">
+                                {{ "Admin panel" | translate }}
+                            </button>
+                        </li>
+                    </ng-container>
+                    <li>
+                        <div
+                            class="dropdown-item d-flex justify-content-between align-items-center gap-2"
+                        >
+                            <span class="me-3">{{ "Choose language" | translate }}</span>
+                            <div class="btn-group">
+                                <button
+                                    class="btn btn-sm"
+                                    (click)="setLanguage('en')"
+                                    [disabled]="langService.current === 'en'"
+                                >
+                                    EN
+                                </button>
+                                <button
+                                    class="btn btn-sm"
+                                    (click)="setLanguage('pl')"
+                                    [disabled]="langService.current === 'pl'"
+                                >
+                                    PL
+                                </button>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <button
+                            class="dropdown-item d-flex justify-content-between align-items-center"
+                            (click)="changeTheme()"
+                        >
+                            <span class="me-3">{{ "Change theme" | translate }}</span>
+                            <i [class]="themeIcon + ' me-4'"></i>
+                        </button>
+                    </li>
+                    <!-- When no current user -->
+                    <li *ngIf="user === null">
+                        <button routerLink="authentication/signin" class="dropdown-item">
+                            {{ "Sign in" | translate }}
+                        </button>
+                        <button routerLink="authentication/signup" class="dropdown-item">
+                            {{ "Sign up" | translate }}
+                        </button>
+                    </li>
+                    <!-- When current user exists -->
+                    <li *ngIf="user !== null">
+                        <button routerLink="" class="dropdown-item" (click)="logout()">
+                            {{ "Log out" | translate }}
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <!--  -->
+    </div>
+</nav>

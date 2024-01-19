@@ -1,0 +1,44 @@
+{
+    "name": "frontend",
+    "version": "1.0.0",
+    "scripts": {
+        "ng": "ng",
+        "start": "ng serve",
+        "build": "ng build",
+        "watch": "ng build --watch --configuration development",
+        "test": "ng test"
+    },
+    "private": true,
+    "dependencies": {
+        "@angular/animations": "^14.1.0",
+        "@angular/common": "^14.1.0",
+        "@angular/compiler": "^14.1.0",
+        "@angular/core": "^14.1.0",
+        "@angular/forms": "^14.1.0",
+        "@angular/platform-browser": "^14.1.0",
+        "@angular/platform-browser-dynamic": "^14.1.0",
+        "@angular/router": "^14.1.0",
+        "@ngx-translate/core": "^14.0.0",
+        "@ngx-translate/http-loader": "^7.0.0",
+        "angular-tag-cloud-module": "^13.0.0",
+        "bootstrap": "^5.2.0",
+        "ngx-file-drop": "^14.0.1",
+        "ngx-markdown": "^14.0.1",
+        "notyf": "^3.10.0",
+        "rxjs": "~7.5.0",
+        "source-map-resolve": "^0.6.0",
+        "tslib": "^2.3.0",
+        "typescript": "~4.7.2",
+        "zone.js": "~0.11.4"
+    },
+    "devDependencies": {
+        "@angular-devkit/build-angular": "^14.1.0",
+        "@angular/cli": "^14.1.1",
+        "@angular/compiler-cli": "^14.1.1",
+        "typescript": "~4.7.2"
+    },
+    "engines": {
+        "node": "16.16.0",
+        "npm": "7.21.0"
+    }
+}

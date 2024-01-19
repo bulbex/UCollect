@@ -1,0 +1,120 @@
+<div
+    class="modal"
+    id="editItemModal"
+    data-bs-backdrop="static"
+    aria-labelledby="editItemLabel"
+    aria-hidden="true"
+>
+    <div
+        class="modal-dialog modal-fullscreen-sm-down modal-dialog-centered modal-dialog-scrollable"
+    >
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="editItemLabel">
+                    {{ "Edit Item" | translate }}
+                </h5>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    [attr.aria-label]="'Close edit item modal' | translate"
+                ></button>
+            </div>
+
+            <div class="modal-body" *ngIf="item">
+                <div>
+                    <label for="editName">{{ "Name" | translate }}</label>
+                    <input
+                        id="editName"
+                        type="text"
+                        [(ngModel)]="item.name"
+                        class="form-control"
+                    />
+                </div>
+                <div>
+                    <label for="editTags" class="mt-2">
+                        {{ "Tags (max.5)" | translate }}
+                    </label>
+                    <input
+                        id="editTags"
+                        type="text"
+                        #itemTags
+                        [(ngModel)]="item.tags"
+                        (input)="autocomplete(itemTags.value)"
+                        class="form-control"
+                    />
+                    <div
+                        *ngIf="autocompleteResult?.length"
+                        class="w-100 btn-group-vertical"
+                    >
+                        <button
+                            *ngFor="let tag of autocompleteResult"
+                            type="button"
+                            class="btn btn-secondary border border-2 text-start"
+                            (click)="setTag(tag, itemTags.value)"
+                        >
+                            {{ tag }}
+                        </button>
+                    </div>
+                </div>
+                <div *ngFor="let field of item?.additionalFields">
+                    <label [for]="'edit' + field.name" class="mt-2">
+                        {{ field.name }}
+                    </label>
+                    <input
+                        *ngIf="field.type !== 'multiline' && field.type !== 'checkbox'"
+                        [id]="'edit' + field.name"
+                        [type]="field.type"
+                        [(ngModel)]="field.value"
+                        [class]="
+                            field.type === 'checkbox'
+                                ? 'form-check-input d-block'
+                                : 'form-control'
+                        "
+                        min="0"
+                        maxlength="30"
+                    />
+                    <textarea
+                        *ngIf="field.type === 'multiline'"
+                        [id]="'edit' + field.name"
+                        [(ngModel)]="field.value"
+                        maxlength="300"
+                        rows="3"
+                        class="form-control"
+                    ></textarea>
+                    <div *ngIf="field.type === 'checkbox'">
+                        <input
+                            [id]="'edit' + field.name"
+                            [type]="field.type"
+                            #checkbox
+                            [value]="checkbox.checked ? false : true"
+                            (input)="field.value = checkbox.value"
+                            [checked]="field.value === 'true'"
+                            class="form-check-input"
+                        />
+                        <label [for]="'edit' + field.name" class="form-check-label ms-2">
+                            {{ "Yes/No" | translate }}
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button
+                    form="editForm"
+                    class="btn btn-primary"
+                    (click)="editItem()"
+                >
+                    {{ "Save" | translate }}
+                </button>
+                <button class="btn btn-secondary" data-bs-dismiss="modal">
+                    {{ "Close" | translate }}
+                </button>
+            </div>
+            
+        </div>
+
+    </div>
+</div>

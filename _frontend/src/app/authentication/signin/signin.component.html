@@ -1,0 +1,53 @@
+<div class="container-sm mt-lg-5 py-sm-5 py-4 text-center">
+
+    <h3 class="mb-4">
+        {{ "Sign in to your account" | translate }}
+    </h3>
+
+    <form
+        #signinForm="ngForm"
+        (ngSubmit)="signinForm.valid && signinUser(signinForm)"
+        class="signin-form m-auto text-start needs-validation"
+    >
+        <div class="form-group mt-2">
+            <label for="username">{{ "Username" | translate }}</label>
+            <input
+                type="text"
+                class="form-control"
+                ngModel
+                #username="ngModel"
+                name="username"
+                id="username"
+                required
+                noSpaces
+            />
+            <div *ngIf="username.errors && signinForm.submitted" class="input-helper">
+                <div *ngIf="username.errors['required'] || username.errors['spaces']">
+                    {{ "Username is required" | translate }}
+                </div>
+            </div>
+        </div>
+        <div class="form-group mt-2">
+            <label for="password">{{ "Password" | translate }}</label>
+            <input
+                type="password"
+                class="form-control"
+                ngModel
+                #password="ngModel"
+                name="password"
+                id="password"
+                autocomplete="on"
+                required
+            />
+            <div *ngIf="password.errors && signinForm.submitted" class="input-helper">
+                <div *ngIf="password.errors['required']">
+                    {{ "Password is required" | translate }}
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary w-100 mt-3">
+            {{ "Sign in" | translate }}
+        </button>
+    </form>
+    
+</div>

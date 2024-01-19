@@ -1,0 +1,86 @@
+<div class="container-xxl p-sm-4 p-2">
+
+    <div class="d-flex justify-content-between align-items-center">
+        <h3 *ngIf="username" class="m-0">
+            {{ username | uppercase }} {{ "Collections" | translate }}
+        </h3>
+        <button routerLink="new-collection" class="btn btn-primary ms-3">
+            {{ "New Collection" | translate }}
+        </button>
+    </div>
+
+    <!-- User collections -->
+    <div *ngIf="collections">
+
+        <div
+            *ngFor="let collection of collections"
+            class="d-flex flex-sm-row flex-column align-items-sm-center text-sm-start text-center border border-1 border-secondary rounded p-3 mt-3"
+        >
+
+            <div
+                class="collection-photo d-flex justify-content-center align-items-center overflow-hidden rounded mx-sm-0 mx-auto"
+            >
+                <img
+                    *ngIf="collection.photo"
+                    [src]="collection.photo"
+                    class="img-fluid rounded"
+                    [alt]="'Collection photo' | translate"
+                />
+                <div
+                    *ngIf="!collection.photo"
+                    class="p-3 opacity-50 rounded border border-1"
+                >
+                    <i class="bi bi-image text-light fs-1"></i>
+                </div>
+            </div>
+
+            <div class="d-flex flex-column ms-sm-2 mt-2">
+                <h5>{{ collection.name }}</h5>
+                <h6>{{ "Topic: " | translate }}{{ collection.topic | translate }}</h6>
+                <h6>{{ "Items: " | translate }}{{ collection.items.length }}</h6>
+            </div>
+
+            <div
+                class="d-flex flex-wrap justify-content-center align-items-center gap-2 ms-sm-auto"
+            >
+                <button
+                    [routerLink]="'/collections/' + collection.name"
+                    class="btn btn-primary"
+                >
+                    {{ "Open" | translate }}
+                </button>
+                <button
+                    type="button"
+                    class="btn btn-primary"
+                    data-bs-toggle="modal"
+                    data-bs-target="#editCollection"
+                    (click)="setCollectionToEdit(collection)"
+                >
+                    {{ "Edit" | translate }}
+                </button>
+                <button
+                    class="btn btn-danger"
+                    [attr.aria-label]="'Delete collection' | translate"
+                    (click)="deleteCollection(collection._id)"
+                >
+                    <i class="bi bi-trash-fill"></i>
+                </button>
+            </div>
+            
+        </div>
+
+        <!-- Edit collection modal -->
+        <app-edit-collection
+            [collection]="collectionToEdit"
+            (edited)="ngOnInit()"
+        ></app-edit-collection>
+        <!--  -->
+
+    </div>
+    <!--  -->
+
+    <div *ngIf="!collections?.length">
+        <hr>
+        <h5 class="mt-2">{{"No collections yet!" | translate}}</h5>
+    </div>
+</div>

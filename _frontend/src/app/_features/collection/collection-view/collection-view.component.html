@@ -1,0 +1,165 @@
+<div class="container-xxl p-sm-4 p-2">
+    <div class="d-flex justify-content-between align-items-center px-2">
+
+        <h3 class="m-0">
+            {{ collection?.name }}
+        </h3>
+
+        <!-- Add item button, only owner or admin can add -->
+        <div class="d-flex flex-wrap gap-2" *ngIf="canModify">
+            <button
+                type="button"
+                class="btn btn-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#addItemModal"
+                [attr.aria-label]="'Open add item modal' | translate"
+            >
+                {{ "Add Item" | translate }}
+            </button>
+        </div>
+        <!--  -->
+
+    </div>
+
+    <!-- Add item modal -->
+    <app-add-item
+        *ngIf="collection"
+        [additionalFields]="additionalFieldsCopy"
+        [parentId]="collection._id"
+        (addedItem)="ngOnInit()"
+    ></app-add-item>
+    <!--  -->
+
+
+    <!-- Collection info -->
+    <div *ngIf="collection" class="container-xxl mt-2">
+
+        <div class="row row-cols-sm-2">
+            <div class="col-12 col-sm-4">
+                <div
+                    class="h-100 position-relative p-2 d-flex justify-content-center align-items-center border border-1 rounded border-primary"
+                >
+                    <img
+                        *ngIf="collection.photo"
+                        [src]="collection.photo"
+                        [alt]="'Collection photo' | translate"
+                        class="img-fluid w-75 rounded"
+                    />
+                    <div
+                        *ngIf="!collection.photo"
+                        class="p-3 m-5 opacity-50 rounded border border-1"
+                    >
+                        <i class="bi bi-image text-light fs-1"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex flex-column gap-2 col-12 col-sm-8 mt-2 mt-sm-0">
+                <div>
+                    <label for="collection-topic">
+                        {{ "Topic" | translate }}
+                    </label>
+                    <span id="collection-topic" class="form-control">
+                        {{ collection.topic | translate}}
+                    </span>
+                </div>
+                <div>
+                    <label for="collection-description">
+                        {{ "Description" | translate }}
+                    </label>
+                    <div
+                        id="collection-description"
+                        class="collection-description form-control overflow-auto text-break"
+                        [innerHTML]="collection.description | markdown"
+                    ></div>
+                </div>
+            </div>
+        </div>
+
+        <hr />
+
+    </div>
+    <!--  -->
+
+    <!-- Collection items -->
+    <div class="container-xxl">
+
+        <div class="d-flex flex-column flex-sm-row">
+            <h4>{{ "Items" | translate }}</h4>
+            <div class="d-flex align-items-center flex-sm-reverse gap-2 ms-auto">
+
+                <!-- Sort controller -->
+                <h6 class="m-0">{{ "Sort: " | translate }}</h6>
+
+                <select
+                    #sortSelect
+                    class="form-select"
+                    (change)="sortItems(sortSelect.value)"
+                >
+                    <option value="addition date">{{ "By addition date" | translate }}</option>
+                    <option value="alphabet">{{ "By alphabet" | translate }}</option>
+                    <option value="likes">{{ "By likes count" | translate }}</option>
+                    <option value="comments">{{ "By comments count" | translate }}</option>
+                </select>
+
+                <button class="btn btn-secondary" (click)="sortItems('order')">
+                    <i [class]="'bi bi-arrow-' + order"></i>
+                </button>
+                <!--  -->
+
+            </div>
+        </div>
+
+        <div
+            *ngFor="let item of collection?.items"
+            class="d-flex flex-sm-row flex-column align-items-center gap-2 border border-1 border-secondary rounded p-3 mt-3"
+        >
+            <h3 class="m-0">
+                {{ item.name }}
+            </h3>
+            <div class="text-center text-sm-start p-2">
+                <div *ngFor="let field of item.additionalFields" class="ms-sm-3">
+                    <span *ngIf="field.type === 'date' || field.type === 'text'">
+                        {{ field.name }}: {{ field.value }}
+                    </span>
+                </div>
+            </div>
+            <div class="d-flex flex-wrap gap-2 ms-sm-auto">
+                <button
+                    [routerLink]="'/items/' + item._id"
+                    class="btn btn-primary"
+                    [attr.aria-label]="'Open item' | translate"
+                >
+                    {{ "Open" | translate }}
+                </button>
+                <button
+                    *ngIf="canModify"
+                    class="btn btn-primary"
+                    data-bs-toggle="modal"
+                    data-bs-target="#editItemModal"
+                    [attr.aria-label]="'Edit item' | translate"
+                    (click)="setItemToEdit(item)"
+                >
+                    {{ "Edit" | translate }}
+                </button>
+                <button
+                    *ngIf="canModify"
+                    class="btn btn-danger"
+                    (click)="deleteItem(item._id)"
+                    [attr.aria-label]="'Delete item' | translate"
+                >
+                    <i class="bi bi-trash-fill"></i>
+                </button>
+            </div>
+        </div>
+
+        <div *ngIf="!collection?.items?.length">
+            <h5 class="mt-2">{{ "No items yet!" | translate }}</h5>
+        </div>
+    </div>
+    <!--  -->
+
+    <!-- Edit item modal -->
+    <app-edit-item [item]="itemToEdit" (edited)="ngOnInit()"></app-edit-item>
+    <!--  -->
+    
+</div>

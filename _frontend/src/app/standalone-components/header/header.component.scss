@@ -1,0 +1,36 @@
+.lang-btn{
+    box-shadow: none !important;
+    &:focus {
+        outline: none;
+        box-shadow: none;
+    }
+    &:disabled {
+        opacity: 1 !important;
+    }
+}
+
+.menu-burger-btn {
+    &::before,
+    &::after {
+        content: "";
+        display: block;
+        width: 30px;
+        height: 2px;
+        background-color: #fff;
+        border-radius: 5px;
+    }
+    span {
+        display: block;
+        width: 30px;
+        height: 2px;
+        background-color: #fff;
+        border-radius: 5px;
+    }
+}
+
+@media screen and (max-width: 575px){
+    .dropdown-mobile {
+        width: 95vw;
+        min-width: fit-content !important;
+    }
+}

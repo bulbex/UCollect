@@ -1,0 +1,219 @@
+<div class="container-xxl p-sm-4 p-2">
+
+    <div class="d-flex justify-content-between align-items-center">
+        <h3>
+            {{ "Create collection" | translate }}
+        </h3>
+        <button
+            type="submit"
+            class="btn btn-lg btn-primary px-4"
+            form="createForm"
+            [attr.aria-label]="'Create collection' | translate"
+        >
+            {{ "Create" | translate }}
+        </button>
+    </div>
+
+    <div>
+        <!-- Create collection form -->
+        <form
+            class="py-2"
+            id="createForm"
+            #createForm="ngForm"
+            (ngSubmit)="createForm.valid && createCollection(createForm)"
+        >
+            <div class="row row-cols-lg-2">
+                <div class="col-12 col-lg-4">
+                    <!-- Drag and drop -->
+                    <ngx-file-drop
+                        *ngIf="!photoPreview"
+                        [multiple]="false"
+                        [directory]="false"
+                        accept=".png, .jpg, .jpeg, .svg"
+                        [showBrowseBtn]="true"
+                        dropZoneClassName="h-100 border border-1 rounded border-primary py-5 px-3"
+                        contentClassName="h-100 fs-5 d-flex flex-column justify-content-center gap-2 text-center py-2"
+                        [dropZoneLabel]="'Upload or browse collection photo' | translate"
+                        [browseBtnLabel]="'Browse images' | translate"
+                        (onFileDrop)="setPhoto($event[0])"
+                    >
+                    </ngx-file-drop>
+                    <!--  -->
+
+                    <!-- Preview of collection photo -->
+                    <div
+                        class="h-100 position-relative p-2 d-flex justify-content-center align-items-center border border-1 rounded border-primary"
+                        *ngIf="photoPreview"
+                    >
+
+                        <img
+                            [src]="photoPreview"
+                            [alt]="'Collection photo' | translate"
+                            class="w-50 rounded"
+                        />
+
+                        <!-- Reset photo button -->
+                        <button
+                            class="btn-close position-absolute top-0 end-0 m-3"
+                            [attr.aria-label]="'Don`t upload collection photo' | translate"
+                            (click)="resetImgPreview()">
+                        </button>
+                        <!--  -->
+
+                    </div>
+                    <!--  -->
+
+                </div>
+                <div class="d-flex flex-column gap-2 col-12 col-lg-8 mt-2 mt-lg-0">
+                    <div>
+                        <label for="collection-name">{{ "Name" | translate }}</label>
+                        <input
+                            type="text"
+                            id="collection-name"
+                            class="form-control"
+                            ngModel
+                            #name="ngModel"
+                            name="name"
+                            minlength="5"
+                            maxlength="50"
+                            required
+                            noSpaces
+                        />
+                        <div
+                            *ngIf="name.errors && createForm.submitted"
+                            class="input-helper"
+                        >
+                            <div *ngIf="name.errors['required'] || name.errors['spaces']">
+                                {{ "Name is required" | translate }}
+                            </div>
+                            <div
+                                *ngIf="name.errors['minlength'] && !name.errors['spaces']"
+                            >
+                                {{ "Name must be at least 5 characters" | translate }}
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="collection-topic">{{ "Topic" | translate }}</label>
+                        <select
+                            id="collection-topic"
+                            class="form-select"
+                            ngModel
+                            #topic="ngModel"
+                            name="topic"
+                            [attr.aria-label]="'Topic select' | translate"
+                            required
+                        >
+                            <option *ngFor="let topic of topics" [value]="topic">
+                                {{ topic | translate }}
+                            </option>
+                        </select>
+                        <div
+                            *ngIf="topic.errors && createForm.submitted"
+                            class="input-helper"
+                        >
+                            <div *ngIf="topic.errors['required']">
+                                {{ "Topic is required" | translate }}
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="collection-description">
+                            {{ "Description" | translate }}
+                        </label>
+                        <textarea
+                            ngModel
+                            #description="ngModel"
+                            name="description"
+                            id="collection-description"
+                            rows="5"
+                            class="form-control"
+                            minlength="10"
+                            maxlength="400"
+                            required
+                            noSpaces
+                        ></textarea>
+                        <div
+                            *ngIf="description.errors && createForm.submitted"
+                            class="input-helper"
+                        >
+                            <div
+                                *ngIf="
+                                    description.errors['required'] ||
+                                    description.errors['spaces']
+                                "
+                            >
+                                {{ "Description is required" | translate }}
+                            </div>
+                            <div *ngIf="description.errors['minlength']">
+                                {{
+                                    "Description must be at least 10 characters"
+                                        | translate
+                                }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--  -->
+
+        <!-- "Additional item fields adding" container -->
+        <div class="mt-1">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <label for="items-fixed-fields">
+                    {{ "Additional item fields (max.3)" | translate }}
+                </label>
+
+                <button
+                    class="btn btn-primary my-1 ms-1"
+                    type="button"
+                    (click)="addField()"
+                >
+                    {{ "Add" | translate }}
+                </button>
+
+            </div>
+
+            <hr class="w-100 m-0" />
+
+            <div class="row row-cols-md-3" *ngIf="itemFields.length">
+                <div *ngFor="let itemField of itemFields">
+                    <label class="mt-3">Field type</label>
+                    <select
+                        #itemFieldSelect
+                        class="form-select"
+                        (change)="itemField.type = itemFieldSelect.value"
+                    >
+                        <option value="text">
+                            {{ "String" | translate }}
+                        </option>
+                        <option value="number">
+                            {{ "Integer" | translate }}
+                        </option>
+                        <option value="multiline">
+                            {{ "Multiline text" | translate }}
+                        </option>
+                        <option value="checkbox">
+                            {{ "Checkbox" | translate }}
+                        </option>
+                        <option value="date">
+                            {{ "Date" | translate }}
+                        </option>
+                    </select>
+                    <label class="mt-2">{{ "Field name" | translate }}</label>
+                    <input
+                        class="form-control"
+                        type="text"
+                        [(ngModel)]="itemField.name"
+                    />
+                </div>
+            </div>
+
+        </div>
+        <!--  -->
+
+    </div>
+</div>

@@ -1,0 +1,117 @@
+<div *ngIf="item" class="container-xxl p-sm-4 p-2">
+    <div class="d-flex flex-column flex-sm-row gap-2 justify-content-between">
+        <h4 class="m-0">
+            {{ item.name }}
+        </h4>
+
+        <h4 class="m-0">
+            {{ "Owner: " | translate }}
+            <span>
+                {{ item.parent.owner.username | uppercase }}
+            </span>
+        </h4>
+
+        <h4 class="m-0">
+            {{ "Collection: " | translate }}
+            <a
+                class="link-primary"
+                role="button"
+                [routerLink]="'/collections/' + item.parent.name"
+            >
+                {{ item.parent.name }}
+            </a>
+        </h4>
+    </div>
+
+    <!-- Info container -->
+    <div class="mt-3 p-3 border border-1 border-secondary rounded">
+        <div class="d-flex justify-content-between align-items-center">
+            <h3 class="m-0 p-0">{{ "Info: " | translate }}</h3>
+
+            <!-- Like button -->
+            <div class="d-flex gap-2 align-items-center">
+                <h5 class="m-0">{{ "Likes: " | translate }}{{ item.likes.length }}</h5>
+                <button
+                    *ngIf="userService.user"
+                    class="btn btn-primary"
+                    [attr.aria-label]="'Like' | translate"
+                    (click)="toggleLike()"
+                >
+                    <i [class]="liked ? 'bi bi-heart-fill' : 'bi bi-heart'"></i>
+                </button>
+            </div>
+            <!--  -->
+        </div>
+
+        <hr />
+
+        <div class="row row-cols-1 row-cols-sm-2">
+            <div class="col">
+                <h5>
+                    {{ "Tags: " | translate }}
+                </h5>
+                <p>{{ item.tags.join("") }}</p>
+            </div>
+
+            <div *ngFor="let field of item?.additionalFields" class="col">
+                <h5>{{ field.name }}:</h5>
+                <p
+                    class="text-break"
+                    [innerText]="
+                        field.type === 'checkbox'
+                            ? field.value === 'true' ? ('Yes' | translate) : ('No' | translate)
+                            : field.value
+                    "
+                ></p>
+            </div>
+        </div>
+    </div>
+    <!--  -->
+
+    <!-- Comments container -->
+    <div class="mt-3 p-3 border border-1 border-secondary rounded">
+        <h3 class="m-0 p-0">{{ "Comments: " | translate }}</h3>
+        <hr />
+        <div class="comments-container overflow-auto">
+            <div
+                *ngFor="let comment of item?.comments"
+                class="d-flex flex-column p-3 mb-2 border border-1 border-secondary rounded"
+            >
+                <div class="d-flex justify-content-between">
+                    <h6 class="m-0">{{ comment.author | uppercase }}</h6>
+                    <h6 class="m-0">{{ comment.time | date: "short" }}</h6>
+                </div>
+                <hr />
+                <p class="m-0">
+                    {{ comment.comment }}
+                </p>
+            </div>
+        </div>
+        <form
+            *ngIf="userService.user"
+            class="d-flex gap-2"
+            #commentForm="ngForm"
+            (ngSubmit)="comment.value && writeComment(commentForm)"
+        >
+            <input
+                ngModel
+                #comment="ngModel"
+                name="comment"
+                type="text"
+                class="form-control"
+                maxlength="60"
+                [placeholder]="'Write comment...' | translate"
+            />
+            <button type="submit" class="btn btn-primary" [disabled]="!canComment">
+                <i class="bi bi-arrow-right"></i>
+            </button>
+        </form>
+    </div>
+    <!--  -->
+</div>
+
+<!-- If no item -->
+<div *ngIf="!item" class="container-xxl p-sm-4 p-2">
+    <h2>{{ "Item not found!" | translate }}</h2>
+</div>
+<!--  -->

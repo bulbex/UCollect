@@ -1,0 +1,119 @@
+<div class="container-sm py-sm-5 py-4 text-center">
+    <h3 class="mb-4">
+        {{ "Create new account" | translate }}
+    </h3>
+    <form
+        #signupForm="ngForm"
+        (ngSubmit)="signupForm.valid && signupUser(signupForm)"
+        class="signup-form m-auto text-start"
+    >
+        <div class="form-group mt-2">
+            <label for="username">
+                {{ "Username" | translate }}
+            </label>
+            <input
+                type="text"
+                class="form-control"
+                ngModel
+                #username="ngModel"
+                name="username"
+                id="username"
+                minlength="5"
+                maxlength="20"
+                required
+                noSpaces
+            />
+            <div *ngIf="username.errors && signupForm.submitted" class="input-helper">
+                <div *ngIf="username.errors['required'] || username.errors['spaces']">
+                    {{ "Username is required" | translate }}
+                </div>
+                <div *ngIf="username.errors['minlength'] && !username.errors['spaces']">
+                    {{ "Username must be at least 5 characters" | translate }}
+                </div>
+            </div>
+        </div>
+        <div class="form-group mt-2">
+            <label for="email">
+                {{ "Email" | translate }}
+            </label>
+            <input
+                type="email"
+                class="form-control"
+                ngModel
+                #email="ngModel"
+                name="email"
+                id="email"
+                required
+                noSpaces
+                email
+            />
+            <div *ngIf="email.errors && signupForm.submitted" class="input-helper">
+                <div *ngIf="email.errors['required'] || email.errors['spaces']">
+                    {{ "Email is required" | translate }}
+                </div>
+                <div *ngIf="email.errors['email']">
+                    {{ "Email must be a valid email address" | translate }}
+                </div>
+            </div>
+        </div>
+        <div class="form-group mt-2">
+            <label for="password">{{ "Password" | translate }}</label>
+            <input
+                type="password"
+                class="form-control"
+                ngModel
+                #password="ngModel"
+                autocomplete="on"
+                name="password"
+                id="password"
+                minlength="5"
+                maxlength="30"
+                required
+            />
+            <div *ngIf="password.errors && signupForm.submitted" class="input-helper">
+                <div *ngIf="password.errors['required']">
+                    {{ "Password is required" | translate }}
+                </div>
+                <div *ngIf="password.errors['minlength']">
+                    {{ "Password must be at least 5 characters" | translate }}
+                </div>
+            </div>
+        </div>
+        <div class="form-group mt-2">
+            <label for="passwordConfirm">
+                {{ "Confirm your password" | translate }}
+            </label>
+            <input
+                type="password"
+                class="form-control"
+                [mustMatch]="password.value"
+                ngModel
+                autocomplete="off"
+                #passwordConfirm="ngModel"
+                name="passwordConfirm"
+                id="passwordConfirm"
+                required
+            />
+            <div
+                *ngIf="passwordConfirm.errors && signupForm.submitted"
+                class="input-helper"
+            >
+                <div *ngIf="passwordConfirm.errors['required']">
+                    {{ "Password confirmation is required" | translate }}
+                </div>
+                <div
+                    #aboba
+                    *ngIf="
+                        passwordConfirm.errors['mustMatch'] &&
+                        !passwordConfirm.errors['required']
+                    "
+                >
+                    {{ "Password confirmation is incorrect" | translate }}
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="w-100 btn btn-primary mt-3">
+            {{ "Create account" | translate }}
+        </button>
+    </form>
+</div>

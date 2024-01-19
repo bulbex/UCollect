@@ -1,0 +1,97 @@
+<div class="container-xxl p-2">
+    <div class="d-flex flex-lg-row flex-column gap-2">
+
+        <!-- Last added items container -->
+        <div
+            class="w-100 d-flex flex-column p-3 overflow-hidden border border-1 border-secondary rounded"
+        >
+            <h4 class="m-0">{{ "Last added items" | translate }}</h4>
+            <hr />
+            <div class="d-flex flex-column gap-2">
+                <button
+                    *ngFor="let item of data?.lastItems"
+                    [routerLink]="'/items/' + item._id"
+                    class="btn btn-secondary d-flex flex-sm-row flex-column justify-content-between align-items-sm-center gap-2 border border-1 border-secondary rounded"
+                >
+                    <h5 class="m-0">
+                        {{ item.name }}
+                    </h5>
+                    <div class="text-start">
+                        <h6>
+                            {{ "Owner: " | translate }}
+                            {{ item.parent.owner.username | uppercase }}
+                        </h6>
+                        <h6 class="m-0">
+                            {{ "Collection: " | translate }}
+                            {{ item.parent.name }}
+                        </h6>
+                    </div>
+                </button>
+            </div>
+        </div>
+        <!--  -->
+
+        <!-- Tags cloud -->
+        <div
+            class="col col-lg-4 p-3 overflow-hidden border border-1 border-secondary rounded"
+        >
+            <h4 class="m-0">{{ "Tags cloud" | translate }}</h4>
+            <hr />
+            <ng-tag-cloud
+                *ngIf="data"
+                [config]="cloudOptions"
+                [zoomOnHover]="cloudOptions.zoomOnHover"
+                [data]="data.tags"
+                class="m-auto"
+                [font]="'8px Arial, sans-serif'"
+                (clicked)="tagClicked($event.text)"
+            >
+            </ng-tag-cloud>
+        </div>
+        <!--  -->
+
+    </div>
+
+    <!-- Top 5 biggest collections -->
+    <div class="mt-2 p-3 overflow-hidden border border-1 border-secondary rounded">
+        <h4 class="m-0">{{ "Top biggest collections" | translate }}</h4>
+        <hr />
+        <button
+            *ngFor="let collection of data?.biggestCollections"
+            [routerLink]="'/collections/' + collection.name"
+            class="btn btn-secondary w-100 d-flex flex-lg-row flex-column align-items-center border border-1 border-secondary rounded p-3 mt-3"
+        >
+            <div
+                class="collection-photo d-flex justify-content-center align-items-center overflow-hidden rounded mx-sm-0 mx-auto"
+            >
+                <img
+                    *ngIf="collection.photo"
+                    [src]="collection.photo"
+                    class="img-fluid rounded"
+                    [alt]="'Collection photo' | translate"
+                />
+                <div
+                    *ngIf="!collection.photo"
+                    class="p-3 opacity-50 rounded border border-1"
+                >
+                    <i class="bi bi-image text-light fs-1"></i>
+                </div>
+            </div>
+            <div class="w-100 row row-cols-1 row-cols-lg-4 align-items-lg-center ms-lg-2">
+                <h3 class="m-lg-0 col">{{ collection.name }}</h3>
+                <h5 class="m-lg-0 col">
+                    {{ "Owner: " | translate}}
+                    {{ collection?.owner.username | uppercase }}
+                </h5>
+                <h5 class="m-lg-0 col">
+                    {{ "Topic: " | translate }}{{ collection.topic | translate }}
+                </h5>
+                <h5 class="m-lg-0 col">
+                    {{ "Items: " | translate }}{{ collection?.items?.length }}
+                </h5>
+            </div>
+        </button>
+    </div>
+    <!--  -->
+
+</div>

@@ -1,0 +1,59 @@
+<!-- Admin panel -->
+<div class="container-xxl p-0">
+
+    <!-- Controller -->
+    <div class="container-fluid bg-primary p-3 d-flex justify-content-between align-items-center">
+        <h3 class="m-0 text-white">{{"Controller" | translate}}</h3>
+        <div class="d-flex gap-2">
+            <button class="btn btn-success" (click)="usersToModify && makeAdmin()">{{ "Make admin" | translate }}</button>
+            <button class="btn btn-danger me-4" (click)="usersToModify && deleteFromAdmin()">{{ "Delete from admin" | translate }}</button>
+            <button class="btn btn-success" (click)="usersToModify && unblock()">
+                <i class="bi bi-unlock-fill"></i>
+            </button>
+            <button class="btn btn-danger" (click)="usersToModify && block()">
+                <i class="bi bi-lock-fill"></i>
+            </button>
+            <button class="btn btn-danger" (click)="usersToModify && delete()">
+                <i class="bi bi-trash-fill"></i>
+            </button>
+        </div>
+    </div>
+    <!--  -->
+
+    <!-- Users Table -->
+    <table *ngIf="allUsers$ | async as users;else noUsers" class="table table-stripped table-bordered table-responsive">
+        <thead>
+            <tr>
+                <th scope="col" class="text-center">#</th>
+                <th scope="col">{{ "Id" | translate }}</th>
+                <th scope="col">{{ "Username" | translate }}</th>
+                <th scope="col">{{ "Email" | translate }}</th>
+                <th scope="col">{{ "Role" | translate }}</th>
+                <th scope="col">{{ "Status" | translate }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let user of users">
+                <th><input #checkbox class="form-check-input d-block mx-auto" type="checkbox" (change)="toggleUserToModify(checkbox.value)" [value]="user._id" /></th>
+                <th>{{user._id}}</th>
+                <th [routerLink]="'/user/' + user.username" class="link-primary text-decoration-underline" role="button">{{user.username}}</th>
+                <th>{{user.email}}</th>
+                <th>{{user.role.value}}</th>
+                <th>{{user.status}}</th>
+            </tr>
+        </tbody>
+    </table>
+    <!--  -->
+    
+</div>
+<!--  -->
+
+<!-- If no users in DB -->
+<ng-template #noUsers>
+    <div class="container-xxl p-sm-4 p-2 text-center">
+        <h2>
+            {{ "No users! (((" | translate }}
+        </h2>
+    </div>
+</ng-template>
+<!--  -->
