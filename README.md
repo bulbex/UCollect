@@ -7,7 +7,12 @@ Deployed on AWS EC2 instance: http://ec2-3-79-232-235.eu-central-1.compute.amazo
 * <img src="https://www.mongodb.com/assets/images/global/favicon.ico" alt="Angular" width="20"/> MongoDB (Mongoose ODM)
 ## What users can do in this app:
 * Registration and login
-* Creation collection of items (ex. stamps, cars, books)
-* Adding items to collections, and give them some additional fields (ex. Author, Publication Date, Description)
-* See another users collections
-* Comment and like other users items
+* Create and manage collections of different type items (e.g. stamps, cars, books)
+* Interact with another users' collections via likes and comments
+## Features worth attention:
+* Optional, customable description fields for every item user create
+* Support for **Markdown** in collection description
+* Tags for items, which can describe item a little bit
+* Tags autocomplete while creating or editing items
+* Cloud of popular items' tags on main page (built using external library)
+* Images for collection
