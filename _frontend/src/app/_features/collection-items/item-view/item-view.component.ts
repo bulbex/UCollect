@@ -18,7 +18,7 @@ export class ItemViewComponent implements OnInit, OnDestroy {
     public item$ = new BehaviorSubject<Item | null>(null)
 
     // Is current user can comment this item?
-    public canComment: boolean = false
+    // public canComment: boolean = false
 
     // Is current user liked this item?
     public liked: boolean = false
@@ -43,9 +43,9 @@ export class ItemViewComponent implements OnInit, OnDestroy {
                 next: (response: Item) => {
                     this.item$.next(response)
                     if (this.userService.user) {
-                        this.canComment = !this.item?.comments.find((comment) => {
-                            return comment.author === this.userService.user?.username
-                        })
+                        // this.canComment = !this.item?.comments.find((comment) => {
+                        //     return comment.author === this.userService.user?.username
+                        // })
                         this.liked = !!this.item?.likes.includes(this.userService.user._id)
                     }
                 },
@@ -105,9 +105,9 @@ export class ItemViewComponent implements OnInit, OnDestroy {
                         this.item.comments = response.comments
                         this.item.likes = response.likes
                         if (this.userService.user) {
-                            this.canComment = !this.item.comments.find((comment) => {
-                                return comment.author === this.userService.user?.username
-                            })
+                            // this.canComment = !this.item.comments.find((comment) => {
+                            //     return comment.author === this.userService.user?.username
+                            // })
                             this.liked = this.item.likes.includes(this.userService.user._id)
                         }
                     }

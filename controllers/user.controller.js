@@ -246,16 +246,6 @@ exports.setComment = async (req, res) => {
 
         let user = await User.findOne({ _id: req.user._id })
 
-        let canComment = true
-        if (item.comments.length) {
-            canComment = !item.comments.find(
-                (comment) => comment.author === user.username
-            )
-        }
-        if (!canComment) {
-            return res.status(403).send({ message: "You already commented this item!" })
-        }
-
         item.comments.push({
             author: user.username,
             comment: req.body.comment,
